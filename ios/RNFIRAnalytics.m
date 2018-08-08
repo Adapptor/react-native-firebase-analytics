@@ -7,9 +7,9 @@ RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
-- (NSDictionary<NSString *, id> *)constantsToExport
++ (BOOL)requiresMainQueueSetup
 {
-  return nil;
+    return YES;
 }
 
 - (void)dealloc
@@ -34,7 +34,9 @@ RCT_EXPORT_METHOD(logEvent: (NSString*)name property: (NSDictionary*)parameters)
 
 RCT_EXPORT_METHOD(setScreenName: (NSString*)name)
 {
-  [FIRAnalytics setScreenName:name screenClass:nil];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [FIRAnalytics setScreenName:name screenClass:nil];
+  });
 }
 
 RCT_EXPORT_METHOD(setEnabled: (BOOL)enabled)
